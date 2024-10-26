@@ -5,7 +5,6 @@ export async function onRequest(context) {
 
     const ASSET_URL = 'https://scarlett518.github.io/gh-proxy/';
     const PREFIX = '/';
-    const Config = { jsdelivr: 0 };
     const whiteList = [];
 
     const PREFLIGHT_INIT = {
