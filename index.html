@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
- <head> 
-  <meta http-equiv="content-type" content="txt/html; charset=utf-8" /> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" /> 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <style>
     body {
@@ -19,62 +19,55 @@
     }
   </style>
   
-  <title>转化github脚本为github代理的方式</title> 
-  <link rel="stylesheet" href="./styles.css" /> 
- </head> 
- <body> 
+  <title>GitHub 代理转换工具</title>
+</head>
+<body>
   <div class="container">
     <div class="d-flex align-items-start flex-wrap">
+      <!-- GitHub 脚本转换卡片 -->
+      <div class="card shadow m-3">
+        <h5 class="card-header">转换 GitHub 一键脚本命令</h5>
+        <div class="card-body">
+          <label>输入你原本的 GitHub 脚本命令:</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="githubScript" placeholder="例如 bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4">
+          </div>
+          <button class="btn btn-primary mb-3" type="button" onclick="convertScript()">转换脚本</button>
+          <p>以下为转换后的一键脚本命令, 请在命令行中执行</p>
+          <label>只处理一层脚本中 GitHub 资源</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="result2" onfocus="this.select()">
+            <button class="btn btn-info" type="button" onclick="copyResult2()">复制</button>
+          </div>
+          <label>处理 GitHub 脚本里面嵌套调用了其它 GitHub 脚本</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="result1" onfocus="this.select()">
+            <button class="btn btn-info" type="button" onclick="copyResult1()">复制</button>
+          </div>
+        </div>
+      </div>
 
-    <div class="card shadow m-3"> 
-     <h5 class="card-header">转换Github一键脚本命令</h5> 
-     <div class="card-body"> 
-      <h5 class="card-title"></h5> 
-      <label>输入你原本的GitHub脚本命令:</label> 
-      <div class="input-group mb-3"> 
-       <input type="text" class="form-control" id="githubScript" aria-describedby="basic-addon1" placeholder="例如 bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4" /> 
-      </div> 
-      <div class="input-group mb-3"> 
-       <button class="btn btn-primary" type="button" onclick="convertScript()" id="cvtBtn">转换脚本</button> 
-      </div> 
-      <p>以下为转换后的一键脚本命令, 请在命令行中执行</p> 
-      <label>只处理一层脚本中GitHub资源</label> 
-      <div class="input-group mb-3"> 
-       <input type="text" class="form-control" id="result2" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-       <button class="btn btn-info" type="button" onclick="copyResult2()">复制</button> 
-      </div> 
-      <label>处理GitHub脚本里面嵌套调用了其它GitHub脚本</label> 
-      <div class="input-group mb-3"> 
-       <input type="text" class="form-control" id="result1" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-       <button class="btn btn-info" type="button" onclick="copyResult1()">复制</button> 
-      </div> 
-     </div> 
-    </div> 
-
-    <div class="card shadow m-3"> 
-     <h5 class="card-header">简单转换Github网址</h5> 
-     <div class="card-body"> 
-      <h5 class="card-title"></h5> 
-      <label>输入GitHub资源链接</label> 
-      <div class="input-group mb-3"> 
-       <input type="text" class="form-control" id="githubRes" aria-describedby="basic-addon1" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh" /> 
-      </div> 
-      <div class="input-group mb-3"> 
-       <button class="btn btn-primary" type="button" onclick="convertRes()" id="cvtBtn">转换资源</button> 
-      </div> 
-      <label>以下为转换后的链接</label> 
-      <div class="input-group mb-3"> 
-       <input type="text" class="form-control" id="resAfterGhproxy" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-       <button class="btn btn-info" type="button" onclick="fetchRes()">获取</button> 
-      </div> 
-     </div> 
-    </div> 
-
+      <!-- GitHub 链接转换卡片 -->
+      <div class="card shadow m-3">
+        <h5 class="card-header">简单转换 GitHub 网址</h5>
+        <div class="card-body">
+          <label>输入 GitHub 资源链接</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="githubRes" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh">
+          </div>
+          <button class="btn btn-primary mb-3" type="button" onclick="convertRes()">转换资源</button>
+          <label>以下为转换后的链接</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="resAfterGhproxy" onfocus="this.select()">
+            <button class="btn btn-info" type="button" onclick="fetchRes()">获取</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> 
-  <script src="./main.js"></script>  
- </body>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpD3y7F5nD1wJ1l6WfQ4zD1D1v7PpD3y7F5nD1wJ1l6WfQ4zD1D1v7Pp" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="./main.js"></script>
+</body>
 </html>
