@@ -7,69 +7,74 @@
   
   <title>转化github脚本为github代理的方式</title> 
   <link rel="stylesheet" href="./styles.css" /> 
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+    }
+  </style>
  </head> 
  <body> 
-  <div class="d-flex align-items-start flex-wrap">
+  <div class="d-flex justify-content-center align-items-center flex-wrap" style="min-height: 100vh;">
   
+    <div class="card shadow m-3"> 
+      <h5 class="card-header">转换Github一键脚本命令</h5> 
+      <div class="card-body"> 
+        <h5 class="card-title"></h5> 
+        <label>输入你原本的GitHub脚本命令:</label> 
+        <div class="input-group mb-3"> 
+          <input type="text" class="form-control" id="githubScript" aria-describedby="basic-addon1" placeholder="例如 bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4" /> 
+        </div> 
+        <div class="input-group mb-3"> 
+          <button class="btn btn-primary" type="button" onclick="convertScript()" id="cvtBtn">转换脚本</button> 
+        </div> 
+        <p>以下为转换后的一键脚本命令, 请在命令行中执行</p> 
+        <label>只处理一层脚本中GitHub资源</label> 
+        <div class="input-group mb-3"> 
+          <input type="text" class="form-control" id="result2" aria-describedby="basic-addon2" onfocus="this.select()" /> 
+          <button class="btn btn-info" type="button" onclick="copyResult2()">复制</button> 
+        </div> 
+        <label>处理GitHub脚本里面嵌套调用了其它GitHub脚本</label> 
+        <div class="input-group mb-3"> 
+          <input type="text" class="form-control" id="result1" aria-describedby="basic-addon2" onfocus="this.select()" /> 
+          <button class="btn btn-info" type="button" onclick="copyResult1()">复制</button> 
+        </div> 
+      </div> 
+    </div> 
 
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">转换Github一键脚本命令</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-    <label>输入你原本的GitHub脚本命令:</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="githubScript" aria-describedby="basic-addon1" placeholder="例如 bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4" /> 
+    <div class="card shadow m-3"> 
+      <h5 class="card-header">简单转换Github网址</h5> 
+      <div class="card-body"> 
+        <h5 class="card-title"></h5> 
+        <label>输入GitHub资源链接</label> 
+        <div class="input-group mb-3"> 
+          <input type="text" class="form-control" id="githubRes" aria-describedby="basic-addon1" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh" /> 
+        </div> 
+        <div class="input-group mb-3"> 
+          <button class="btn btn-primary" type="button" onclick="convertRes()" id="cvtBtn">转换资源</button> 
+        </div> 
+        <label>以下为转换后的链接</label> 
+        <div class="input-group mb-3"> 
+          <input type="text" class="form-control" id="resAfterGhproxy" aria-describedby="basic-addon2" onfocus="this.select()" /> 
+          <button class="btn btn-info" type="button" onclick="fetchRes()">获取</button> 
+        </div> 
+      </div> 
     </div> 
-    <div class="input-group mb-3"> 
-     <button class="btn btn-primary" type="button" onclick="convertScript()" id="cvtBtn">转换脚本</button> 
-    </div> 
-    <p>以下为转换后的一键脚本命令, 请在命令行中执行</p> 
-    <label>只处理一层脚本中GitHub资源</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="result2" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="copyResult2()">复制</button> 
-    </div> 
-    <label>处理GitHub脚本里面嵌套调用了其它GitHub脚本</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="result1" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="copyResult1()">复制</button> 
-    </div> 
-   </div> 
-  </div> 
 
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">简单转换Github网址</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-    <label>输入GitHub资源链接</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="githubRes" aria-describedby="basic-addon1" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh" /> 
+    <div class="card shadow m-3"> 
+      <h5 class="card-header">其它说明</h5> 
+      <div class="card-body"> 
+        <h5 class="card-title"></h5> 
+    
+        <label>高级参数 (不懂就不要动)</label> 
+        <div class="input-group mb-3"> 
+          <span class="input-group-text">Github Proxy</span> 
+          <input type="text" class="form-control" id="ghproxy" aria-describedby="basic-addon3" value="https://ghproxy.crazypeace.workers.dev/" /> 
+          <button class="btn btn-info" type="button" onclick="getLocalUrl()" id="localUrlBtn">使用本页</button> 
+        </div> 
+      </div> 
     </div> 
-    <div class="input-group mb-3"> 
-     <button class="btn btn-primary" type="button" onclick="convertRes()" id="cvtBtn">转换资源</button> 
-    </div> 
-    <label>以下为转换后的链接</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="resAfterGhproxy" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="fetchRes()">获取</button> 
-    </div> 
-   </div> 
-  </div> 
 
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">其它说明</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-  
-
-    <label>高级参数 (不懂就不要动)</label> 
-    <div class="input-group mb-3"> 
-     <span class="input-group-text">Github Proxy</span> 
-     <input type="text" class="form-control" id="ghproxy" aria-describedby="basic-addon3" value="https://ghproxy.crazypeace.workers.dev/" /> 
-     <button class="btn btn-info" type="button" onclick="getLocalUrl()" id="localUrlBtn">使用本页</button> 
-    </div> 
-   </div> 
-  </div> 
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> 
